@@ -1,0 +1,25 @@
+.elements__remove {
+    position: absolute;
+    top: 12px;
+    right: 9px;
+    width: 30px;
+    height: 30px;
+    background: transparent url(../../../images/trash_rmv-btn.svg) no-repeat center;
+    background-size: 18px;
+    border-radius: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    cursor: url(../../../images/cursors/cursor_hover_btn.svg), pointer;
+    z-index: 10;
+    transition: opacity 100ms ease-in-out;
+    box-sizing: border-box;
+}
+
+.elements__remove:hover {
+    opacity: .6;
+}
+
+.elements__remove:active {
+    opacity: 1;
+}

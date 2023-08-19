@@ -1,0 +1,13 @@
+.authForm__sign-in{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFF;
+    text-align: center;
+    font-size: 14px;
+    font-family: Inter, serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 100%;
+}

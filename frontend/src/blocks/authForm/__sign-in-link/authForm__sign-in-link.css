@@ -1,0 +1,10 @@
+.authForm__sign-in-link{
+    text-decoration: none;
+    padding: 0;
+    margin: 14px 0;
+}
+
+.authForm__sign-in-link:link           { color: #FFF }  /* unvisited links       */
+.authForm__sign-in-link:visited        { color: #FFF }  /* visited links         */
+.authForm__sign-in-link:hover, a:focus { opacity: .8}  /* user hovers, or focus */
+.authForm__sign-in-link:active         { color: #FFF }  /* active links          */

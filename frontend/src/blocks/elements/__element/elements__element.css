@@ -1,0 +1,12 @@
+.elements__element {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    z-index: 7;
+}

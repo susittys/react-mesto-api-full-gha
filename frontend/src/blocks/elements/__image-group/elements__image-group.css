@@ -1,0 +1,10 @@
+.elements__image-group {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 282px;
+    margin: 0;
+    padding: 0;
+    cursor: url(../../../images/cursors/cursor_hover_btn.svg), pointer;
+    z-index: 8;
+}

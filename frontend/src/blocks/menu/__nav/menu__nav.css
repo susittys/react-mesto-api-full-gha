@@ -1,0 +1,15 @@
+.menu__nav{
+    color: #FFF;
+    font-size: 18px;
+    font-family: Inter, serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    text-decoration: none;
+}
+
+.menu__nav:link    { color: #FFF }  /* unvisited links       */
+.menu__nav:visited { color: #FFF }  /* visited links         */
+.menu__nav:hover   { opacity: 0.6000000238418579 }  /* user hovers, or focus */
+.menu__nav:focus   { color: #FFF; opacity: 1 }  /* user hovers, or focus */
+.menu__nav:active  { color: #FFF }  /* active links          */

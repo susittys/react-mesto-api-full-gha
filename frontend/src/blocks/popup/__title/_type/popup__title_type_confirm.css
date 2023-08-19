@@ -1,0 +1,12 @@
+.popup__title_type_confirm {
+    text-align: center;
+    margin: 32px 0 0 0;
+}
+
+@media only screen and (max-width: 425px) {
+    .popup__title_type_confirm {
+        font-size: 20px;
+        margin: 40px 0 0 0;
+        padding: 0;
+    }
+}

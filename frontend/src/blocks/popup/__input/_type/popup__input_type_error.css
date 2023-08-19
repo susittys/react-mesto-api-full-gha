@@ -1,0 +1,4 @@
+.popup__input_type_error:focus,
+.popup__input_type_error:invalid {
+    border-bottom-color: #FF0000;
+}

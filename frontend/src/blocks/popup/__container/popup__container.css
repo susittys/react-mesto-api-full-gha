@@ -1,0 +1,9 @@
+.popup__container {
+    position: relative;
+}
+
+@media only screen and (max-width: 425px) {
+    .popup__container {
+        width: calc(100% - 38px);
+    }
+}

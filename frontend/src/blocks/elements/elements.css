@@ -1,0 +1,14 @@
+.elements {
+    min-height: 400px;
+    margin: 0 auto 67px auto;
+    padding: 0;
+    z-index: 5;
+}
+
+@media only screen and (max-width: 690px) {
+    .elements {
+        min-height: 150px;
+        margin: 0 auto 48px auto;
+        padding: 0 19px;
+    }
+}

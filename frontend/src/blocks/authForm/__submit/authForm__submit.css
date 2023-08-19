@@ -1,0 +1,30 @@
+.authForm__submit{
+    color: #000;
+    background-color: #FFFFFF;
+
+    width: 358px;
+    height: 50px;
+
+    text-align: center;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: normal;
+    font-style: normal;
+
+    border: 0;
+    border-radius: 2px;
+
+    margin: 186px 0 20px 0;
+    padding: 0;
+}
+
+@media only screen and (max-width: 425px) {
+    .authForm__submit{
+        width: 260px;
+        height: 46px;
+    }
+}
+
+.authForm__submit:hover{
+    opacity: .8;
+}
