@@ -12,9 +12,9 @@ import { requestLogger, errorLogger } from './middlewares/logger.js';
 
 config();
 const {
-  DEV_PORT, PROD_PORT, ORIGIN,
+  PROD_PORT, ORIGIN,
 } = process.env;
-const PORT = process.env.NODE_ENV === 'production' ? PROD_PORT : DEV_PORT;
+const PORT = process.env.NODE_ENV === 'production' ? PROD_PORT : 3000;
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 минут
