@@ -8,7 +8,7 @@
 
 ### Ссылки на проект
 
-IP-адрес 158.160.62.28
+IP 158.160.62.28
 
 Frontend https://askelove.nomoreparties.co
 
