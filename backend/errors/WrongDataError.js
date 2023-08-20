@@ -5,4 +5,4 @@ class WrongDataError extends Error {
   }
 }
 
-export default WrongDataError
+export default WrongDataError;

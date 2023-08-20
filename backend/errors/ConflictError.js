@@ -5,4 +5,4 @@ class ConflictError extends Error {
   }
 }
 
-export default ConflictError
+export default ConflictError;

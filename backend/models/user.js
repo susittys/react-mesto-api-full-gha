@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import isEmail from 'validator/lib/isEmail.js';
 import isURL from 'validator/lib/isURL.js';
-import UnauthorizedError from "../errors/UnauthorizedError.js";
+import UnauthorizedError from '../errors/UnauthorizedError.js';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -42,11 +42,11 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.findUserByCredentials = function findUserByCredentials({ email, password }) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
-      if (!user) return Promise.reject( new UnauthorizedError('Не найден пользователь с данным ID') );
+      if (!user) return Promise.reject(new UnauthorizedError('Не найден пользователь с данным ID'));
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
-          if (!matched) return Promise.reject( new UnauthorizedError('Не верные почта или пароль') );
+          if (!matched) return Promise.reject(new UnauthorizedError('Не верные почта или пароль'));
 
           return user;
         });

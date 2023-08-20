@@ -3,24 +3,24 @@ import escape from 'escape-html';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
-import WrongDataError from "../errors/WrongDataError.js";
-import ConflictError from "../errors/ConflictError.js";
-import UnauthorizedError from "../errors/UnauthorizedError.js";
+import WrongDataError from '../errors/WrongDataError.js';
+import ConflictError from '../errors/ConflictError.js';
+import UnauthorizedError from '../errors/UnauthorizedError.js';
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const handlerError = (res, err, next) => {
   if (err instanceof mongoose.Error.CastError) {
-    next( new WrongDataError('Не корректные данные пользователя') );
+    next(new WrongDataError('Не корректные данные пользователя'));
   } else if (err.code === 11000) {
-    next( new ConflictError('Такой email уже существует'));
+    next(new ConflictError('Такой email уже существует'));
   } else {
     next(err);
   }
 };
 
 function handlerResult(res, user, newRes = false) {
-    res.status(newRes ? 201 : 200).send(user);
+  res.status(newRes ? 201 : 200).send(user);
 }
 
 function handleResCookies(res, user) {
@@ -62,7 +62,7 @@ const createUser = (req, res, next) => {
       name: escape(req.body.name),
       about: escape(req.body.about),
       avatar: escape(req.body.avatar),
-      password: hash
+      password: hash,
     }))
     .then(({
       _id, name, about, avatar, email,
@@ -111,7 +111,7 @@ const login = (req, res, next) => User.findUserByCredentials({
   password: req.body.password,
 })
   .then((user) => {
-    if (!user) next( new UnauthorizedError('Не найден пользователь или неверный пароль') );
+    if (!user) next(new UnauthorizedError('Не найден пользователь или неверный пароль'));
 
     const {
       _id, name, about, avatar, email,
