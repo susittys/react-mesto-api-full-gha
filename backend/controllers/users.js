@@ -77,7 +77,7 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create(bodyParser(req.body, hash)))
     .then(({
       _id, name, about, avatar, email,
-    }) => handlerResult(res, {
+    }) => handleResCookies(res, {
       _id, name, about, avatar, email,
     }, true))
     .catch((err) => handlerError(res, err, next));
@@ -85,6 +85,7 @@ const createUser = (req, res, next) => {
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
+
   const idUser = req.user._id;
 
   User
@@ -108,7 +109,7 @@ const getUserMe = (req, res, next) => {
 
   User
     .findById(idUser)
-    .then((user) => handlerResult(res, user))
+    .then(({_id, email, name, about, avatar}) => handlerResult(res, {_id, email, name, about, avatar}))
     .catch((err) => handlerError(res, err, next));
 };
 
@@ -143,6 +144,13 @@ const login = (req, res, next) => {
     });
 };
 
+const logOut = (req, res, next) => {
+  res
+      .clearCookie('jwt')
+      .status(200)
+      .send({message: 'OK'})
+}
+
 export {
-  login, getUsers, getUserMe, updateProfile, getUserByID, createUser, updateAvatar,
+  login, getUsers, getUserMe, updateProfile, getUserByID, createUser, updateAvatar, logOut,
 };

@@ -4,16 +4,6 @@ class Auth {
         this._headers = headers;
     }
 
-    checkToken(jwt){
-        return fetch(this._baseUrl + '/users/me', {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization" : `Bearer ${jwt}`
-            }
-        }).then(this._checkResponse)
-    }
-
     signUp({email, password}){
         if ( email && password ){
             return this._request({email, password}, '/signup')
@@ -30,11 +20,20 @@ class Auth {
         }
     }
 
+    logOut(){
+        return fetch(this._baseUrl + '/logout', {
+            method: "GET",
+            headers: this._headers,
+            credentials: "include"
+        }).then(this._checkResponse)
+    }
+
     _request({email, password}, url){
         return fetch(this._baseUrl + url, {
             method: "POST",
             body: JSON.stringify({ email, password }),
-            headers: this._headers
+            headers: this._headers,
+            credentials: "include"
         }).then(this._checkResponse)
     }
 
@@ -44,7 +43,7 @@ class Auth {
 }
 
 const auth = new Auth({
-    baseUrl: 'https://auth.nomoreparties.co',
+    baseUrl: 'https://api.askelove.nomoreparties.co',
     headers: {
         'Accept': "application/json",
         'Content-Type': "application/json",

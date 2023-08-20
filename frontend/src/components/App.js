@@ -18,7 +18,6 @@ import ImagePopup from "./ImagePopup";
 import InfoTooltip from "./InfoTooltip";
 import Burger from "./Burger";
 
-
 import successIcon from '../images/info-success.svg';
 import errorIcon from '../images/info-error.svg';
 import defIcon from '../images/info-def.svg';
@@ -38,49 +37,30 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
 
-  const checkToken = () => {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      auth.checkToken(jwt)
-        .then( ({data}) => {
-          if ( data ) {
-            setEmail(data.email);
-            setLoggedIn(true);
-            navigate("/", {replace: true})
-          }
-        })
-        .catch( error => {
-          if ( error.status === 400 ){
-            showTooltipInfo({
-              type: "error",
-              text: 'Токен не передан или передан не в том формате'
-            })
-          } else if ( error.status === 401){
-            showTooltipInfo({
-              type: "error",
-              text: 'Переданный токен некорректен'
-            })
-          }
-        })
-    }
+  function acceptUser({_id, name, email, avatar, about}){
+    setCurrentUser({
+      userID: _id,
+      userName: name,
+      userAvatar: avatar,
+      userDescr: about
+    })
+
+    setEmail(email);
+    setLoggedIn(true);
+    navigate("/", {replace: true})
   }
 
   React.useEffect(() => {
-    api.executeRequest('/cards')
+    api.getInfo('/cards')
       .then( initCard => setCards(initCard) )
       .catch( error => console.log(error) )
   }, [] );
 
   React.useEffect(() => {
-    api.executeRequest('/users/me')
-      .then( user => setCurrentUser({
-          userID: user._id,
-          userName: user.name,
-          userAvatar: user.avatar,
-          userDescr: user.about
-      }))
+    api.getInfo('/users/me')
+      .then( user => acceptUser(user))
       .catch( error => console.log(error) )
-    checkToken();
+
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [isBurgerOpen, setBurgerOpen] = React.useState(false);
@@ -162,15 +142,13 @@ function App() {
 
   function handleRegisterSubmit(email,password){
     auth.signUp({email, password})
-        .then( ({data})=> {
-          if ( data ) {
+        .then( (user) => {
             showTooltipInfo({
               type: "success",
-              text: `Пользователь ${data.email} был успешно зарегистрирован`
+              text: `Пользователь ${user.email} был успешно зарегистрирован`
             });
 
-            navigate("/sign-in", {replace: true})
-          }
+            acceptUser(user)
         })
         .catch( error => {
           if ( error.status === 401 || error.status === 400 ) {
@@ -187,19 +165,14 @@ function App() {
   }
 
   function handleAuthorizationSubmit(username, password){
-
     auth.signIn({email: username, password})
-        .then( ({token}) => {
-          if (token) {
-            localStorage.setItem('jwt', token);
+        .then( (user) => {
+          showTooltipInfo({
+            type: "success",
+            text: `Добро пожаловать, ${user.name}`
+          });
 
-            checkToken();
-
-            showTooltipInfo({
-              type: "success",
-              text: 'Авторизация успешно пройдена'
-            });
-          }
+          acceptUser(user)
         })
         .catch( error => {
           if ( error.status === 400 ) {
@@ -235,10 +208,13 @@ function App() {
   }
 
   const logOut = () => {
-    localStorage.removeItem('jwt');
-    setLoggedIn(false);
-    setBurgerOpen(false);
-    closeAllPopups();
+    auth.logOut()
+        .then( () => {
+          setLoggedIn(false);
+          setBurgerOpen(false);
+          closeAllPopups();
+        })
+      .catch( err => console.log('Ошибка при выходе из аканаута', err) )
   }
 
   const closeAllPopups = () => {

@@ -26,6 +26,8 @@ function handlerResult(res, card, newRes = false) {
 const getCards = (req, res, next) => {
   Card
     .find({})
+    .populate(['owner', 'likes'])
+    .sort({ '_id': -1 })
     .then((cards) => handlerResult(res, cards))
     .catch((err) => handlerError(res, err, next));
 };
@@ -43,6 +45,7 @@ const createCard = (req, res, next) => {
   };
   Card
     .create(newCard)
+    .then((card) => card.populate(['owner', 'likes']))
     .then((card) => handlerResult(res, card, true))
     .catch((err) => handlerError(res, err, next));
 };
@@ -53,7 +56,7 @@ const deleteCard = (req, res, next) => {
 
   Card
     .findById(idCard)
-    .populate('owner')
+    .populate(['owner', 'likes'])
     .then((card) => {
       if (!card) throw error.NotFound('Карточка не найдена');
 

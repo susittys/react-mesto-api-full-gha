@@ -4,15 +4,18 @@ class Api {
         this._headers = headers;
     }
 
-    executeRequest(url){
+    getInfo(url){
         return this._request( url, {
-            headers: this._headers,
             method: 'GET'
         })
     }
 
     _request(url, options) {
-        return fetch(this._baseUrl + url, options).then(this._checkResponse)
+        return fetch(this._baseUrl + url, {
+            headers: this._headers,
+            credentials: 'include',
+            ...options
+        }).then(this._checkResponse)
     }
 
     _checkResponse(res){
@@ -23,7 +26,6 @@ class Api {
 
     updateAvatar(avatar, url){
         return this._request( url, {
-            headers: this._headers,
             method: 'PATCH',
             body: JSON.stringify(avatar)
         })
@@ -31,7 +33,6 @@ class Api {
 
     addUserCard(data, url){
         return this._request( url, {
-            headers: this._headers,
             method: 'POST',
             body: JSON.stringify(data)
         })
@@ -39,7 +40,6 @@ class Api {
 
     editUserProfile({ name, job }, url){
         return this._request( url, {
-            headers: this._headers,
             method: 'PATCH',
             body: JSON.stringify({
                 name: name,
@@ -50,25 +50,22 @@ class Api {
 
     setLikeStatus({ url, method }){
         return this._request( url, {
-            headers: this._headers,
             method
         })
     }
 
     removeUserCard(url){
         return this._request( url, {
-            headers: this._headers,
             method: 'DELETE'
         })
     }
 }
 
 const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-65',
+    baseUrl: 'https://api.askelove.nomoreparties.co',
     headers: {
-        authorization: 'f7452356-457e-4c18-bc82-10cbc145928e',
-        'Content-Type': 'application/json'
-    }
+        'Content-Type': "application/json",
+    },
 });
 
 export default api;

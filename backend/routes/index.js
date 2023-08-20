@@ -6,13 +6,14 @@ import auth from '../middlewares/auth.js';
 import users from './users.js';
 import cards from './cards.js';
 
-import { createUser, login } from '../controllers/users.js';
+import { createUser, login, logOut } from '../controllers/users.js';
 
 const rootRouter = Router();
 
 const { createUserValidator, loginUserValidator } = Validator();
 rootRouter.post('/signup', createUserValidator, createUser);
 rootRouter.post('/signin', loginUserValidator, login);
+rootRouter.get('/logout', logOut);
 
 rootRouter.use(auth);
 rootRouter.use('/users', users);

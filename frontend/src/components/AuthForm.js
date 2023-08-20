@@ -26,6 +26,7 @@ function AuthForm({title, titleSubmit, placeholder, username, password, handleCh
                     minLength={2}
                     maxLength={200}
                     onChange={handleChangeInputPassword}
+                    autocomplete="on"
                     required
                 />
 
