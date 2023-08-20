@@ -8,8 +8,8 @@
 
 ### Ссылки на проект
 
-**IP-адрес** **158.160.62.28**
+IP-адрес 158.160.62.28
 
-**Frontend** https://askelove.nomoreparties.co
+Frontend https://askelove.nomoreparties.co
 
-**Backend** https://api.askelove.nomoreparties.co
+Backend https://api.askelove.nomoreparties.co
