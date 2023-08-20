@@ -11,8 +11,10 @@ import handlerError from './middlewares/handlerError.js';
 import { requestLogger, errorLogger } from './middlewares/logger.js';
 
 config();
-const { DEV_PORT, PROD_PORT, HOST, DB, ORIGIN } = process.env;
-const PORT = process.env.NODE_ENV == 'production' ? PROD_PORT : DEV_PORT;
+const {
+  DEV_PORT, PROD_PORT, HOST, DB, ORIGIN,
+} = process.env;
+const PORT = process.env.NODE_ENV === 'production' ? PROD_PORT : DEV_PORT;
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 минут
@@ -28,7 +30,7 @@ const app = express();
 
 app.use(cors({
   credentials: true,
-  origin: ORIGIN
+  origin: ORIGIN,
 }));
 
 app.use(helmet());
@@ -56,5 +58,3 @@ app.use(errors());
 app.use(handlerError);
 
 app.listen(PORT);
-
-console.log('Rerun')

@@ -1,5 +1,5 @@
-import winston from 'winston'
-import expressWinston from 'express-winston'
+import winston from 'winston';
+import expressWinston from 'express-winston';
 
 // создадим логгер запросов
 const requestLogger = expressWinston.logger({
@@ -17,4 +17,4 @@ const errorLogger = expressWinston.errorLogger({
   format: winston.format.json(),
 });
 
-export { requestLogger, errorLogger }
+export { requestLogger, errorLogger };

@@ -29,6 +29,19 @@ function handlerResult(res, user, newRes = false) {
   }
 }
 
+function handleResCookies(res, user) {
+  const token = jwt.sign(
+    { _id: user._id },
+    NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key',
+    { expiresIn: '7d' },
+  );
+
+  res
+    .status(200)
+    .cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true })
+    .send(user);
+}
+
 const getUsers = (req, res, next) => {
   User
     .find({})
@@ -109,47 +122,40 @@ const getUserMe = (req, res, next) => {
 
   User
     .findById(idUser)
-    .then(({_id, email, name, about, avatar}) => handlerResult(res, {_id, email, name, about, avatar}))
+    .then(({
+      _id, email, name, about, avatar,
+    }) => handlerResult(res, {
+      _id, email, name, about, avatar,
+    }))
     .catch((err) => handlerError(res, err, next));
 };
 
-function handleResCookies(res, user) {
-  const token = jwt.sign(
-    { _id: user._id },
-    NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key',
-    { expiresIn: '7d' },
-  );
+const login = (req, res, next) => User.findUserByCredentials({
+  email: req.body.email,
+  password: req.body.password,
+})
+  .then((user) => {
+    if (!user) throw error.Unauthorized('Не найден пользователь или неверный пароль');
 
-  res
-    .status(200)
-    .cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true })
-    .send(user);
-}
-
-const login = (req, res, next) => {
-  const { email, password } = req.body;
-
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      if (!user) throw error.Unauthorized('Не найден пользователь или неверный пароль');
-
-      const {_id, name, about, avatar, email} = user
-      handleResCookies(res, {
-        _id, name, about, avatar, email
-      });
-    })
-    .catch((err) => {
-      res.clearCookie('jwt');
-      next(err);
+    const {
+      _id, name, about, avatar, email,
+    } = user;
+    handleResCookies(res, {
+      _id, name, about, avatar, email,
     });
-};
+  })
+  .catch((err) => {
+    res.clearCookie('jwt');
+    next(err);
+  });
 
+// eslint-disable-next-line no-unused-vars
 const logOut = (req, res, next) => {
   res
-      .clearCookie('jwt')
-      .status(200)
-      .send({message: 'OK'})
-}
+    .clearCookie('jwt')
+    .status(200)
+    .send({ message: 'OK' });
+};
 
 export {
   login, getUsers, getUserMe, updateProfile, getUserByID, createUser, updateAvatar, logOut,

@@ -27,7 +27,7 @@ const getCards = (req, res, next) => {
   Card
     .find({})
     .populate(['owner', 'likes'])
-    .sort({ '_id': -1 })
+    .sort({ _id: -1 })
     .then((cards) => handlerResult(res, cards))
     .catch((err) => handlerError(res, err, next));
 };
