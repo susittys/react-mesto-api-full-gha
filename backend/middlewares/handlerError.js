@@ -1,7 +1,7 @@
-// eslint-disable-next-line no-unused-vars
 export default (err, req, res, next) => {
-  const { message = 'На сервере произошла ошибка' } = err;
-  const { statusCode = 500 } = err;
+  const statusCode = err.statusCode || 500;
 
+  const message = statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
   res.status(statusCode).send({ message });
+  next();
 };

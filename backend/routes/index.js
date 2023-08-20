@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import Errors from '../common/errors.js';
 import Validator from '../common/validator.js';
 import auth from '../middlewares/auth.js';
+import NotFoundError from "../errors/NotFoundError.js";
 
 import users from './users.js';
 import cards from './cards.js';
@@ -19,9 +19,8 @@ rootRouter.use(auth);
 rootRouter.use('/users', users);
 rootRouter.use('/cards', cards);
 
-const errors = Errors();
 rootRouter.all('*', (err, req, next) => {
-  next(errors.NotFound('Ресурс по вашему запросу не найден'));
+  next( new NotFoundError('Ресурс по вашему запросу не найден') );
 });
 
 export default rootRouter;

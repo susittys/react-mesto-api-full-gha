@@ -1,26 +1,21 @@
 import mongoose from 'mongoose';
 import escape from 'escape-html';
-import Error from '../common/errors.js';
-import Validator from '../common/validator.js';
 import Card from '../models/card.js';
-
-const error = Error();
-const { checkImgURL } = Validator();
+import isURL from "validator/lib/isURL.js";
+import WrongDataError from "../errors/WrongDataError.js";
+import NotFoundError from "../errors/NotFoundError.js"
+import ForbiddenError from "../errors/ForbiddenError.js";
 
 const handlerError = (res, err, next) => {
   if (err instanceof mongoose.Error.CastError || err.name === 'ValidationError') {
-    next(error.BadRequest('Некорректный данные карточки'));
+    next( new WrongDataError('Некорректный данные карточки') );
   } else {
     next(err);
   }
 };
 
-function handlerResult(res, card, newRes = false) {
-  if (!card) {
-    throw error.NotFound('Данной карточки не существует');
-  } else {
-    res.status(newRes ? 201 : 200).send(card);
-  }
+const handlerResult = (res, data, newRes = false) => {
+    res.status(newRes ? 201 : 200).send(data);
 }
 
 const getCards = (req, res, next) => {
@@ -36,7 +31,7 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
-  if (!checkImgURL(link)) throw error.BadRequest('Не корректно указана ссылка');
+  if ( !isURL(link) ) next( new WrongDataError('Не корректная ссылка') );
 
   const newCard = {
     name: escape(name),
@@ -58,31 +53,28 @@ const deleteCard = (req, res, next) => {
     .findById(idCard)
     .populate(['owner', 'likes'])
     .then((card) => {
-      if (!card) throw error.NotFound('Карточка не найдена');
+      if (!card) next( new NotFoundError('Карточка не найдена') );
 
-      if (card.owner._id.toString() !== idUser) throw error.Forbidden('Недостаточно прав');
+      if (card.owner._id.toString() !== idUser) next( new ForbiddenError('Недостаточно прав') );
 
-      Card.deleteOne(card)
-        .then(() => {
-          Card
-            .find({ owner: idUser })
-            .populate(['owner', 'likes'])
-            .then((data) => handlerResult(res, data));
-        });
+      return card.deleteOne({_id: card._id})
     })
-    .catch((err) => handlerError(res, err, next));
+    .then((data) => handlerResult(res, data))
+    .catch((err) => handlerError(res, err, next))
 };
 
 const setLikeCard = (req, res, next) => {
   const { id } = req.params;
-  if (!mongoose.isValidObjectId(id)) throw error.BadRequest('Не правильно указан ID карточки');
+
+  if (!mongoose.isValidObjectId(id)) next( new WrongDataError('Не правильно указан ID карточки') );
+
   Card
     .findByIdAndUpdate(
       id,
       { $addToSet: { likes: req.user._id } },
       { new: true },
     )
-    .orFail(() => error.NotFound('Карточка не найдена'))
+    .orFail(() => next( new NotFoundError('Карточка не найдена') ) )
     .populate(['owner', 'likes'])
     .then((card) => handlerResult(res, card))
     .catch((err) => handlerError(res, err, next));
@@ -95,7 +87,7 @@ const unsetLikeCard = (req, res, next) => {
       { $pull: { likes: req.user._id } },
       { new: true },
     )
-    .orFail(() => error.NotFound('Карточка не найдена'))
+    .orFail(() => next( new NotFoundError('Карточка не найдена') ) )
     .populate(['owner', 'likes'])
     .then((card) => handlerResult(res, card))
     .catch((err) => handlerError(res, err, next));
