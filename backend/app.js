@@ -12,7 +12,7 @@ import { requestLogger, errorLogger } from './middlewares/logger.js';
 
 config();
 const {
-  DEV_PORT, PROD_PORT, HOST, DB, ORIGIN,
+  DEV_PORT, PROD_PORT, ORIGIN,
 } = process.env;
 const PORT = process.env.NODE_ENV === 'production' ? PROD_PORT : DEV_PORT;
 
@@ -21,7 +21,7 @@ const limiter = rateLimit({
   max: 100, // 100 запросов с одного IP
 });
 
-mongoose.connect(HOST + DB, {
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
