@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
-import escape from 'escape-html';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 import WrongDataError from '../errors/WrongDataError.js';
 import ConflictError from '../errors/ConflictError.js';
 import UnauthorizedError from '../errors/UnauthorizedError.js';
-import NotFoundError from "../errors/NotFoundError.js";
+import NotFoundError from '../errors/NotFoundError.js';
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -54,21 +53,17 @@ const getUserByID = (req, res, next) => {
     .catch((err) => handlerError(res, err, next));
 };
 
-// проверка на содержание и кодирование пароля
 const hashedPassword = (pass) => bcrypt.hash(pass, 10);
 
 const createUser = (req, res, next) => {
   hashedPassword(req.body.password)
     .then((hash) => User.create({
-      email: escape(req.body.email),
-      name: escape(req.body.name),
-      about: escape(req.body.about),
-      avatar: escape(req.body.avatar),
+      ...req.body,
       password: hash,
     }))
     .then(({
-             _id, name, about, avatar, email,
-           }) => handleResCookies(res, {
+      _id, name, about, avatar, email,
+    }) => handleResCookies(res, {
       _id, name, about, avatar, email,
     }, true))
     .catch((err) => handlerError(res, err, next));
@@ -101,8 +96,8 @@ const getUserMe = (req, res, next) => {
   User
     .findById(idUser)
     .then(({
-             _id, email, name, about, avatar,
-           }) => handlerResult(res, {
+      _id, email, name, about, avatar,
+    }) => handlerResult(res, {
       _id, email, name, about, avatar,
     }))
     .catch((err) => handlerError(res, err, next));
