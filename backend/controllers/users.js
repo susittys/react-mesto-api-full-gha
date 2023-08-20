@@ -6,6 +6,7 @@ import User from '../models/user.js';
 import WrongDataError from '../errors/WrongDataError.js';
 import ConflictError from '../errors/ConflictError.js';
 import UnauthorizedError from '../errors/UnauthorizedError.js';
+import NotFoundError from "../errors/NotFoundError.js";
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -48,6 +49,7 @@ const getUserByID = (req, res, next) => {
 
   User
     .findById(idUser)
+    .orFail(() => next(new NotFoundError('Пользователь не найден')))
     .then((user) => handlerResult(res, user))
     .catch((err) => handlerError(res, err, next));
 };
@@ -65,8 +67,8 @@ const createUser = (req, res, next) => {
       password: hash,
     }))
     .then(({
-      _id, name, about, avatar, email,
-    }) => handleResCookies(res, {
+             _id, name, about, avatar, email,
+           }) => handleResCookies(res, {
       _id, name, about, avatar, email,
     }, true))
     .catch((err) => handlerError(res, err, next));
@@ -99,8 +101,8 @@ const getUserMe = (req, res, next) => {
   User
     .findById(idUser)
     .then(({
-      _id, email, name, about, avatar,
-    }) => handlerResult(res, {
+             _id, email, name, about, avatar,
+           }) => handlerResult(res, {
       _id, email, name, about, avatar,
     }))
     .catch((err) => handlerError(res, err, next));
