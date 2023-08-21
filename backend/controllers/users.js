@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 import WrongDataError from '../errors/WrongDataError.js';
 import ConflictError from '../errors/ConflictError.js';
-import UnauthorizedError from '../errors/UnauthorizedError.js';
 import NotFoundError from '../errors/NotFoundError.js';
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -108,8 +107,6 @@ const login = (req, res, next) => User.findUserByCredentials({
   password: req.body.password,
 })
   .then((user) => {
-    if (!user) throw new UnauthorizedError('Не найден пользователь или неверный пароль');
-
     const {
       _id, name, about, avatar, email,
     } = user;

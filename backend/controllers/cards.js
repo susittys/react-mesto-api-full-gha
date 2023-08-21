@@ -52,8 +52,9 @@ const deleteCard = (req, res, next) => {
     .then((card) => {
       if (!card) next(new NotFoundError('Карточка не найдена'));
 
-      if (card.owner._id.toString() !== idUser) next(new ForbiddenError('Недостаточно прав'));
-
+      if (card.owner._id.toString() !== idUser) {
+        throw new ForbiddenError('Недостаточно прав');
+      }
       return card.deleteOne({ _id: card._id });
     })
     .then((data) => handlerResult(res, data))
@@ -62,8 +63,6 @@ const deleteCard = (req, res, next) => {
 
 const setLikeCard = (req, res, next) => {
   const { id } = req.params;
-
-  if (!mongoose.isValidObjectId(id)) next(new WrongDataError('Не правильно указан ID карточки'));
 
   Card
     .findByIdAndUpdate(
