@@ -108,7 +108,7 @@ const login = (req, res, next) => User.findUserByCredentials({
   password: req.body.password,
 })
   .then((user) => {
-    if (!user) next(new UnauthorizedError('Не найден пользователь или неверный пароль'));
+    if (!user) throw new UnauthorizedError('Не найден пользователь или неверный пароль');
 
     const {
       _id, name, about, avatar, email,
@@ -117,10 +117,7 @@ const login = (req, res, next) => User.findUserByCredentials({
       _id, name, about, avatar, email,
     });
   })
-  .catch((err) => {
-    res.clearCookie('jwt');
-    next(err);
-  });
+  .catch(next);
 
 // eslint-disable-next-line no-unused-vars
 const logOut = (req, res, next) => {

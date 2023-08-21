@@ -17,6 +17,7 @@ yarn-error.log*
 # Optional REPL history
 .DS_Store
 .idea
+.editorconfig
 
 # Environment variables
 .env

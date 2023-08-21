@@ -12,6 +12,8 @@ export default (req, res, next) => {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key');
   } catch (e) {
     next(new UnauthorizedError('Не верные почта или пароль'));
+
+    return;
   }
 
   req.user = payload;

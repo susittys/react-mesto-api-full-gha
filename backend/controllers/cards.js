@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import escape from 'escape-html';
-import isURL from 'validator/lib/isURL.js';
 import Card from '../models/card.js';
 import WrongDataError from '../errors/WrongDataError.js';
 import NotFoundError from '../errors/NotFoundError.js';
@@ -30,8 +29,6 @@ const getCards = (req, res, next) => {
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
-
-  if (!isURL(link)) next(new WrongDataError('Не корректная ссылка'));
 
   const newCard = {
     name: escape(name),
